@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Toolbox Splitter</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>CLASS_PERFORMER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Class/Interface</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>COMPUTIME</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>CURRENT_PART</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>METHOD_PERFORMER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Class/Interface component</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>PARTS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>SEGMENT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
+     <CMPNAME>TOTAL_LINES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
