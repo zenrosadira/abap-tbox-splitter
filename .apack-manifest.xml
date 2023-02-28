@@ -3,10 +3,10 @@
  <asx:values>
   <DATA>
    <GROUP_ID>ztbox</GROUP_ID>
-   <ARTIFACT_ID>abap-tbox-lockwaiter</ARTIFACT_ID>
+   <ARTIFACT_ID>abap-tbox-splitter</ARTIFACT_ID>
    <VERSION>0.1</VERSION>
    <REPOSITORY_TYPE>abapGit</REPOSITORY_TYPE>
-   <GIT_URL>https://github.com/zenrosadira/abap-tbox-jobber.git</GIT_URL>
+   <GIT_URL>https://github.com/zenrosadira/abap-tbox-splitter.git</GIT_URL>
   </DATA>
  </asx:values>
 </asx:abap>
