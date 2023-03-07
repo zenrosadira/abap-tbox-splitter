@@ -3,7 +3,7 @@
 This utility allows you to easily split the rows of a table into multiple tables by performing a split by size (i.e. number of rows) or by parts (i.e. number of output tables)
 
 # Quick start
-Instantiate class ZTBOX_CL_SPLITTER passing an internal table
+Create an object of class ZTBOX_CL_SPLITTER passing an internal table
 
 `DATA(splitter) = NEW ztbox_cl_splitter( t_vbak ).`
 
