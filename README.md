@@ -31,7 +31,7 @@ For both SPLIT_BY_PART and SPLIT_BY_SIZE method the parameter must be an integer
 
 Call method COUNT to get the number of parts in which the main table has been splitted.
 
-`splitter->count( )`
+`DATA(parts) = splitter->count( )`
 
 # Example
 ```
