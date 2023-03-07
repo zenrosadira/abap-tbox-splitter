@@ -9,15 +9,15 @@ public section.
 
   methods GET_PART
     importing
-      !IV_PART type INT4
+      !I_PART type I
     changing
       !CT_TABLE type TABLE .
   methods SPLIT_BY_PART
     importing
-      !I_PARTS type INT4 .
+      !I_PARTS type I .
   methods SPLIT_BY_SIZE
     importing
-      !I_SIZE type INT4 .
+      !I_SIZE type I .
   methods COUNT
     returning
       value(R_COUNT) type I .
@@ -28,18 +28,6 @@ protected section.
 private section.
 
   types:
-    BEGIN OF ty_parts,
-      part TYPE REF TO data,
-    END OF ty_parts .
-  types:
-    ty_parts_t TYPE TABLE OF ty_parts .
-  types:
-    BEGIN OF ty_parts_guid,
-      guid TYPE sysuuid_c36,
-    END OF ty_parts_guid .
-  types:
-    ty_parts_guid_t TYPE TABLE OF ty_parts_guid .
-  types:
     BEGIN OF ty_parts_ix,
       part       TYPE i,
       table_part TYPE REF TO data,
@@ -48,17 +36,13 @@ private section.
     ty_parts_ix_t TYPE HASHED TABLE OF ty_parts_ix WITH UNIQUE KEY part .
 
   data MAIN_TABLE type ref to DATA .
-  data TABLE_PARTS type TY_PARTS_T .
-  data CLASS_PERFORMER type SEOCLSNAME .
-  data METHOD_PERFORMER type SEOCMPNAME .
-  data PARTS_GUID type TY_PARTS_GUID_T .
-  data CURRENT_PART type INT4 .
   data PARTS_IX type TY_PARTS_IX_T .
-  data SEGMENT type INT4 .
-  data PARTS type INT4 .
+  data SEGMENT type I .
+  data PARTS type I .
   data SPLIT_TYPE type C .
-  data TOTAL_LINES type INT4 .
-  data COMPUTIME type INT4 .
+  data TOTAL_LINES type I .
+  constants C_SPLIT_BY_PART type C value 'P' ##NO_TEXT.
+  constants C_SPLIT_BY_SIZE type C value 'S' ##NO_TEXT.
 
   methods _SPLIT_TABLE .
   methods _GET_POSITION
@@ -85,7 +69,7 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
 
   METHOD get_part.
 
-    DATA(part) = VALUE #( parts_ix[ part = iv_part ] OPTIONAL ).
+    DATA(part) = VALUE #( parts_ix[ part = i_part ] OPTIONAL ).
     CHECK part IS NOT INITIAL.
 
     CHECK part-table_part IS BOUND.
@@ -98,43 +82,43 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD SPLIT_BY_PART.
+  METHOD split_by_part.
 
-    CLEAR parts_ix.
+    CHECK i_parts BETWEEN 1 AND total_lines.
 
     parts       = i_parts.
     segment     = total_lines DIV parts.
-    split_type  = 'P'.
+    split_type  = c_split_by_part.
 
     _split_table( ).
 
   ENDMETHOD.
 
 
-  METHOD SPLIT_BY_SIZE.
+  METHOD split_by_size.
 
-    CLEAR parts_ix.
+    CHECK i_size BETWEEN 1 AND total_lines.
 
     segment     = i_size.
-    split_type  = 'S'.
+    split_type  = c_split_by_size.
 
     _split_table( ).
 
   ENDMETHOD.
 
 
-  METHOD _GET_POSITION.
+  METHOD _get_position.
 
     CASE split_type.
 
-      WHEN 'P'. " Split by part
+      WHEN c_split_by_part.
 
         r_pos = COND #(
           WHEN i_index MOD segment EQ 0
             THEN nmin( val1 = i_index DIV segment     val2 = parts )
             ELSE nmin( val1 = i_index DIV segment + 1 val2 = parts ) ).
 
-      WHEN 'S'. " Split by package size
+      WHEN c_split_by_size.
 
         r_pos = COND #(
           WHEN i_index MOD segment EQ 0
@@ -148,19 +132,10 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
 
   METHOD _split_table.
 
-    GET TIME STAMP FIELD DATA(start).
-
-    FIELD-SYMBOLS <main> TYPE ANY TABLE.
-    FIELD-SYMBOLS <part> TYPE ANY TABLE.
-
-    DATA part LIKE LINE OF parts_ix.
-
     CHECK main_table IS BOUND.
-    ASSIGN main_table->* TO <main>.
 
-    CHECK <main> IS ASSIGNED.
-
-    LOOP AT <main> ASSIGNING FIELD-SYMBOL(<row>).
+    CLEAR parts_ix.
+    LOOP AT main_table->* ASSIGNING FIELD-SYMBOL(<row>).
 
       DATA(ix)   = _get_position( sy-tabix ).
 
@@ -169,35 +144,19 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
 
         WHEN 0.
 
-          CHECK <part_ix>-table_part IS BOUND.
-          ASSIGN <part_ix>-table_part->* TO <part>.
-          CHECK <part> IS ASSIGNED.
-
-          INSERT <row> INTO TABLE <part>.
+          INSERT <row> INTO TABLE <part_ix>-table_part->*.
 
         WHEN OTHERS.
 
-          IF <part> IS ASSIGNED.
-            UNASSIGN <part>.
-          ENDIF.
+          DATA(part) = VALUE ty_parts_ix( part = ix ).
+          CREATE DATA part-table_part LIKE main_table->*.
 
-          CLEAR part.
-          CREATE DATA part-table_part LIKE <main>.
-          ASSIGN part-table_part->* TO <part>.
-          CHECK <part> IS ASSIGNED.
-
-          INSERT <row> INTO TABLE <part>.
-
-          part-part = ix.
-          INSERT part INTO TABLE parts_ix.
+          INSERT <row>  INTO TABLE part-table_part->*.
+          INSERT part   INTO TABLE parts_ix.
 
       ENDCASE.
 
     ENDLOOP.
-
-    GET TIME STAMP FIELD DATA(end).
-
-    computime = end - start.
 
   ENDMETHOD.
 

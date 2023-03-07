@@ -11,50 +11,54 @@
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
    </VSEOCLASS>
+   <LINES>
+    <TLINE>
+     <TDFORMAT>U1</TDFORMAT>
+     <TDLINE>&amp;FUNCTIONALITY&amp;</TDLINE>
+    </TLINE>
+    <TLINE>
+     <TDFORMAT>AS</TDFORMAT>
+     <TDLINE>This utility allows you to easily split a table&apos;s data into multiple</TDLINE>
+    </TLINE>
+    <TLINE>
+     <TDFORMAT>AS</TDFORMAT>
+     <TDLINE>tables by performing a split by size (i.e., number of rows)</TDLINE>
+    </TLINE>
+    <TLINE>
+     <TDFORMAT>AS</TDFORMAT>
+     <TDLINE>or by parts (i.e., number of output tables).</TDLINE>
+    </TLINE>
+   </LINES>
    <DESCRIPTIONS>
     <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>CLASS_PERFORMER</CMPNAME>
+     <CMPNAME>COUNT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Class/Interface</DESCRIPT>
+     <DESCRIPT>Count the number of the splitted parts</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>COMPUTIME</CMPNAME>
+     <CMPNAME>GET_PART</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+     <DESCRIPT>Get the part number &lt;i_part&gt; of the table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>CURRENT_PART</CMPNAME>
+     <CMPNAME>SPLIT_BY_PART</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+     <DESCRIPT>Split the table into the indicated number of parts</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>METHOD_PERFORMER</CMPNAME>
+     <CMPNAME>SPLIT_BY_SIZE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Class/Interface component</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>PARTS</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>SEGMENT</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CLSNAME>ZTBOX_CL_SPLITTER</CLSNAME>
-     <CMPNAME>TOTAL_LINES</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>4 Byte Signed Integer</DESCRIPT>
+     <DESCRIPT>Split the table into parts of the same size + the remaining</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <SCONAME>I_MAIN_TABLE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Pass any table to be split</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
