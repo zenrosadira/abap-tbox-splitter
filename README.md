@@ -2,7 +2,7 @@
 
 This utility allows you to easily split the rows of a table into multiple tables by performing a split by size (i.e. number of rows) or by parts (i.e. number of output tables)
 
-# Quick start
+## Usage
 Create an object of class ZTBOX_CL_SPLITTER passing an internal table
 
 `DATA(splitter) = NEW ztbox_cl_splitter( t_vbak ).`
@@ -33,7 +33,7 @@ Call method COUNT to get the number of parts in which the main table has been sp
 
 `DATA(parts) = splitter->count( )`
 
-# Example
+## Example
 ```
 DATA t_vbak_part TYPE TABLE OF vbak.
 SELECT * FROM vbak INTO TABLE @DATA(t_vbak).
@@ -61,5 +61,5 @@ DO splitter->count( ) TIMES.
 ENDDO.
 ```
 
-# Installation
+## Installation
 Install this project using [abapGit](https://abapgit.org/) ![abapGit](https://docs.abapgit.org/img/favicon.png)
