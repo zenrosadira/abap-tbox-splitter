@@ -67,6 +67,13 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD count.
+
+    r_count = lines( parts_ix ).
+
+  ENDMETHOD.
+
+
   METHOD get_part.
 
     DATA(part) = VALUE #( parts_ix[ part = i_part ] OPTIONAL ).
@@ -134,8 +141,12 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
 
     CHECK main_table IS BOUND.
 
+    FIELD-SYMBOLS <part> TYPE ANY TABLE.
+    FIELD-SYMBOLS <main> TYPE ANY TABLE.
+    ASSIGN main_table->* TO <main>.
+
     CLEAR parts_ix.
-    LOOP AT main_table->* ASSIGNING FIELD-SYMBOL(<row>).
+    LOOP AT <main> ASSIGNING FIELD-SYMBOL(<row>).
 
       DATA(ix)   = _get_position( sy-tabix ).
 
@@ -144,26 +155,21 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
 
         WHEN 0.
 
-          INSERT <row> INTO TABLE <part_ix>-table_part->*.
+          ASSIGN <part_ix>-table_part->* TO <part>.
+          INSERT <row> INTO TABLE <part>.
 
         WHEN OTHERS.
 
           DATA(part) = VALUE ty_parts_ix( part = ix ).
-          CREATE DATA part-table_part LIKE main_table->*.
+          CREATE DATA part-table_part LIKE <main>.
+          ASSIGN part-table_part->* TO <part>.
 
-          INSERT <row>  INTO TABLE part-table_part->*.
+          INSERT <row>  INTO TABLE <part>.
           INSERT part   INTO TABLE parts_ix.
 
       ENDCASE.
 
     ENDLOOP.
-
-  ENDMETHOD.
-
-
-  METHOD count.
-
-    r_count = lines( parts_ix ).
 
   ENDMETHOD.
 ENDCLASS.
