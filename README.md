@@ -5,7 +5,7 @@ This utility allows you to easily split the rows of a table into multiple tables
 ## Quick Start
 ```abap
 * First, create an instance passing an internal table
-DATA(splitter) = NEW ztbox_cl_splitter( t_vbak ).
+DATA(splitter) = NEW zcl_tbox_splitter( t_vbak ).
 
 * Call method SPLIT_BY_PART to split the table into a known number of sub-tables
 splitter->split_by_part( 4 ).
