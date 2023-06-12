@@ -54,4 +54,4 @@ ENDDO.
 ```
 
 ## Installation
-Install this project using [abapGit](https://abapgit.org/) ![abapGit](https://docs.abapgit.org/img/favicon.png)
+Install this project using [abapGit](https://abapgit.org/)
