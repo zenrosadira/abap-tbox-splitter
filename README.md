@@ -35,7 +35,7 @@ IF lines( t_vbak ) < 1000.
   RETURN.
 ENDIF.
 
-DATA(splitter) = NEW ztbox_cl_splitter( t_vbak ).
+DATA(splitter) = NEW zcl_tbox_splitter( t_vbak ).
 
 splitter->split_by_size( 1000 ).
 
