@@ -1,144 +1,123 @@
-class ZTBOX_CL_SPLITTER definition
-  public
-  final
-  create public .
+CLASS zcl_tbox_splitter DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC.
 
-public section.
+  PUBLIC SECTION.
+    INTERFACES if_serializable_object.
 
-  interfaces IF_SERIALIZABLE_OBJECT .
+    METHODS get_part
+      IMPORTING i_part   TYPE i
+      CHANGING  ct_table TYPE table.
 
-  methods GET_PART
-    importing
-      !I_PART type I
-    changing
-      !CT_TABLE type TABLE .
-  methods SPLIT_BY_PART
-    importing
-      !I_PARTS type I .
-  methods SPLIT_BY_SIZE
-    importing
-      !I_SIZE type I .
-  methods COUNT
-    returning
-      value(R_COUNT) type I .
-  methods CONSTRUCTOR
-    importing
-      !I_MAIN_TABLE type TABLE optional .
-protected section.
-private section.
+    METHODS split_by_part
+      IMPORTING i_parts TYPE i.
 
-  types:
-    BEGIN OF ty_parts_ix,
-      part       TYPE i,
-      table_part TYPE REF TO data,
-    END OF ty_parts_ix .
-  types:
-    ty_parts_ix_t TYPE HASHED TABLE OF ty_parts_ix WITH UNIQUE KEY part .
+    METHODS split_by_size
+      IMPORTING i_size TYPE i.
 
-  data MAIN_TABLE type ref to DATA .
-  data PARTS_IX type TY_PARTS_IX_T .
-  data SEGMENT type I .
-  data PARTS type I .
-  data SPLIT_TYPE type C .
-  data TOTAL_LINES type I .
-  constants C_SPLIT_BY_PART type C value 'P' ##NO_TEXT.
-  constants C_SPLIT_BY_SIZE type C value 'S' ##NO_TEXT.
+    METHODS count
+      RETURNING VALUE(r_count) TYPE i.
 
-  methods _SPLIT_TABLE .
-  methods _GET_POSITION
-    importing
-      !I_INDEX type INT4
-    returning
-      value(R_POS) type INT4 .
+    METHODS constructor
+      IMPORTING i_main_table TYPE table OPTIONAL.
+
+  PRIVATE SECTION.
+    TYPES:
+      BEGIN OF ty_parts_ix,
+        part       TYPE i,
+        table_part TYPE REF TO data,
+      END OF ty_parts_ix.
+    TYPES ty_parts_ix_t TYPE HASHED TABLE OF ty_parts_ix WITH UNIQUE KEY part.
+
+    DATA main_table  TYPE REF TO data.
+    DATA parts_ix    TYPE ty_parts_ix_t.
+    DATA segment     TYPE i.
+    DATA parts       TYPE i.
+    DATA split_type  TYPE c LENGTH 1.
+    DATA total_lines TYPE i.
+
+    CONSTANTS c_split_by_part TYPE c LENGTH 1 VALUE 'P' ##NO_TEXT.
+    CONSTANTS c_split_by_size TYPE c LENGTH 1 VALUE 'S' ##NO_TEXT.
+
+    METHODS _split_table.
+
+    METHODS _get_position
+      IMPORTING i_index      TYPE int4
+      RETURNING VALUE(r_pos) TYPE int4.
 ENDCLASS.
 
 
-
-CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
-
-
-  METHOD CONSTRUCTOR.
-
+CLASS zcl_tbox_splitter IMPLEMENTATION.
+  METHOD constructor.
     CREATE DATA main_table LIKE i_main_table.
-    GET REFERENCE OF i_main_table INTO main_table.
+    main_table = REF #( i_main_table ).
 
     total_lines = lines( i_main_table ).
-
   ENDMETHOD.
-
 
   METHOD count.
-
     r_count = lines( parts_ix ).
-
   ENDMETHOD.
-
 
   METHOD get_part.
-
     DATA(part) = VALUE #( parts_ix[ part = i_part ] OPTIONAL ).
-    CHECK part IS NOT INITIAL.
+    IF part IS INITIAL.
+      RETURN.
+    ENDIF.
 
-    CHECK part-table_part IS BOUND.
+    IF part-table_part IS NOT BOUND.
+      RETURN.
+    ENDIF.
     ASSIGN part-table_part->* TO FIELD-SYMBOL(<part>).
 
-    CHECK <part> IS ASSIGNED.
+    IF <part> IS NOT ASSIGNED.
+      RETURN.
+    ENDIF.
 
     ct_table = <part>.
-
   ENDMETHOD.
-
 
   METHOD split_by_part.
-
     CHECK i_parts BETWEEN 1 AND total_lines.
 
-    parts       = i_parts.
-    segment     = total_lines DIV parts.
-    split_type  = c_split_by_part.
+    parts      = i_parts.
+    segment    = total_lines DIV parts.
+    split_type = c_split_by_part.
 
     _split_table( ).
-
   ENDMETHOD.
-
 
   METHOD split_by_size.
-
     CHECK i_size BETWEEN 1 AND total_lines.
 
-    segment     = i_size.
-    split_type  = c_split_by_size.
+    segment    = i_size.
+    split_type = c_split_by_size.
 
     _split_table( ).
-
   ENDMETHOD.
 
-
   METHOD _get_position.
-
     CASE split_type.
 
       WHEN c_split_by_part.
 
         r_pos = COND #(
-          WHEN i_index MOD segment EQ 0
-            THEN nmin( val1 = i_index DIV segment     val2 = parts )
-            ELSE nmin( val1 = i_index DIV segment + 1 val2 = parts ) ).
+          WHEN i_index MOD segment = 0
+          THEN nmin( val1 = i_index DIV segment     val2 = parts )
+          ELSE nmin( val1 = i_index DIV segment + 1 val2 = parts ) ).
 
       WHEN c_split_by_size.
 
         r_pos = COND #(
-          WHEN i_index MOD segment EQ 0
-            THEN i_index DIV segment
-            ELSE i_index DIV segment + 1 ).
+          WHEN i_index MOD segment = 0
+          THEN i_index DIV segment
+          ELSE i_index DIV segment + 1 ).
 
     ENDCASE.
-
   ENDMETHOD.
 
-
   METHOD _split_table.
-
     CHECK main_table IS BOUND.
 
     FIELD-SYMBOLS <part> TYPE ANY TABLE.
@@ -148,7 +127,7 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
     CLEAR parts_ix.
     LOOP AT <main> ASSIGNING FIELD-SYMBOL(<row>).
 
-      DATA(ix)   = _get_position( sy-tabix ).
+      DATA(ix) = _get_position( sy-tabix ).
 
       READ TABLE parts_ix ASSIGNING FIELD-SYMBOL(<part_ix>) WITH TABLE KEY part = ix.
       CASE sy-subrc.
@@ -164,12 +143,11 @@ CLASS ZTBOX_CL_SPLITTER IMPLEMENTATION.
           CREATE DATA part-table_part LIKE <main>.
           ASSIGN part-table_part->* TO <part>.
 
-          INSERT <row>  INTO TABLE <part>.
-          INSERT part   INTO TABLE parts_ix.
+          INSERT <row> INTO TABLE <part>.
+          INSERT part  INTO TABLE parts_ix.
 
       ENDCASE.
 
     ENDLOOP.
-
   ENDMETHOD.
 ENDCLASS.
